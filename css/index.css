@@ -1,0 +1,141 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    overflow: hidden;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    max-width: 500px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+}
+input {
+    align-self: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    background-color: #f0f0f0;
+    color: #555;
+    font-family: 'Courier New', Courier, monospace;
+    caret-color: transparent;
+    width: 95%;
+}
+input:focus {
+    outline: none;
+    border-color: #007BFF;
+}
+button {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+a {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+
+button:hover {
+    background-color: #0056b3;
+}
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #007BFF;
+    font-family: 'Courier New', Courier, monospace;
+}
+p {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #555;
+    font-family: 'Courier New', Courier, monospace;
+}
+::-webkit-input-placeholder {
+    font-family: 'Courier New', Courier, monospace;
+    color: #555;
+    text-decoration: none;
+    caret-color: transparent;
+}
+:-moz-placeholder {
+    font-family: 'Courier New', Courier, monospace;
+    color: #555;
+    text-decoration: none;
+    caret-color: transparent;
+}
+::-moz-placeholder {
+    font-family: 'Courier New', Courier, monospace;
+    color: #555;
+    text-decoration: none;
+    caret-color: transparent;
+}
+:-ms-input-placeholder {
+    font-family: 'Courier New', Courier, monospace;
+    color: #555;
+    text-decoration: none;
+    caret-color: transparent;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 600px) {
+    h1, p, input, button {
+        font-size: 1.5rem; /* Increase the font size */
+    }
+}
+
+/* Styles for the fake cursor */
+.input-container {
+    position: relative;
+    display: inline-block;
+    
+}
+
+.input-container input {
+    font-family: monospace;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    align-self: start;
+}
+
+.input-container .fake-cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: monospace;
+    font-size: 20px;
+    color: transparent;
+    pointer-events: none;
+    line-height: 2; /* Adjust this value to align the cursor with the bottom of the text */
+}
+
+.input-container .fake-cursor::after {
+    content: "_";
+    color: black;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { color: transparent; }
+}
