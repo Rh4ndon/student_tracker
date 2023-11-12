@@ -82,7 +82,7 @@ if(isset($_COOKIE['user_id'])){
       data.append("lng", pos.coords.longitude);
 
       // (B2) AJAX SEND TO SERVER
-      fetch("3-ajax-track.php", { method:"POST", body:data })
+      fetch("controllers/ajax-track.php", { method:"POST", body:data })
       .then(res => res.text())
       .then(txt => { if (txt=="OK") {
         let now = new Date();
