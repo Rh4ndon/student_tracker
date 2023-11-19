@@ -45,8 +45,17 @@ if(isset($_COOKIE['user_id'])){
 
 
 
-    <br><br><br><br>
- 
+    <br><br><br><br><br><br>
+    <!-- HTML -->
+<div id="studentsList">
+    <table id="studentsTable">
+        <!-- Table headers -->
+        <tr>
+            <th>List of students who are outside ISU San Mateo</th>
+        </tr>
+    </table>
+</div>
+<br>
 
     <div id="map"></div>
     
@@ -105,6 +114,46 @@ if(isset($_COOKIE['user_id'])){
             return inside;
             }
 
+
+
+
+            //add student on list
+
+            // JavaScript
+             // Initialize an empty array to store the students
+            var studentsOutsideSchool = [];
+
+            // Function to add a student to the list
+            function addStudent(studentName) {
+            studentsOutsideSchool.push(studentName);
+            displayStudents();
+            }
+
+            // Function to remove a student from the list
+            function removeStudent(studentName) {
+            var index = studentsOutsideSchool.indexOf(studentName);
+             if (index > -1) {
+              studentsOutsideSchool.splice(index, 1);
+             }
+            displayStudents();
+            }
+
+            // Function to display the students in a table
+            function displayStudents() {
+             var table = document.getElementById('studentsTable');
+             // Clear the table, keeping the header
+             table.innerHTML = '<tr><th>List of students who are outside ISU San Mateo</th></tr>';
+             for(var i = 0; i < studentsOutsideSchool.length; i++) {
+              // Create a new row
+             var row = table.insertRow(-1);
+                // Insert a cell in the row
+             var cell = row.insertCell(0);
+             // Add the student name in the cell
+             cell.innerHTML = studentsOutsideSchool[i];
+             }
+            }
+
+
             <?php
             $query_location = $conn->prepare("SELECT * FROM `gps_track`");
             $query_location->execute([]);
@@ -142,16 +191,19 @@ if(isset($_COOKIE['user_id'])){
 
               student = L.marker([lat, long]).addTo(map);
 
-              
+
+
+              //if outside or inside the school area
 
               if (isInsidePolygon(students, schoolCoords)) {
 
                 student.bindPopup(stud +" is inside ISU San Mateo!").openPopup();
+                removeStudent(stud);
 
                 } else {
 
                 student.bindPopup(stud +" is outside ISU San Mateo!").openPopup();
-
+                addStudent(stud);
           
                 }
 
