@@ -204,7 +204,10 @@ if(isset($_COOKIE['user_id'])){
 
                 student.bindPopup(stud +" is outside ISU San Mateo!").openPopup();
                 addStudent(stud);
-          
+                    
+                //alert(stud +" is outside ISU San Mateo!");
+                //console.log(stud +" is outside ISU San Mateo!");
+
                 }
 
 
