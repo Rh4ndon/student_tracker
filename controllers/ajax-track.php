@@ -4,7 +4,7 @@ if (isset($_POST["req"])) {
   switch ($_POST["req"]) {
     // (A) UPDATE RIDER LOCATION
     case "update":
-      echo $_TRACK->update($_POST["id"], $_POST["lng"], $_POST["lat"])
+      echo $_TRACK->update($_POST["id"],$_POST["name"], $_POST["lng"], $_POST["lat"])
         ? "OK" : $_TRACK->error ;
       break;
 

@@ -26,7 +26,7 @@
     </form>
     <script src="js/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <?php include 'controllers/alerts.php'; ?>
+    
 </body>
 </html>
 
@@ -54,9 +54,9 @@ if(isset($_POST['submit'])){
      
   }else if ($select_admin->rowCount() > 0){
      setcookie('user_id', $row_admin['id'], time() + 60*60*24*30, '/');
-     header('location:dashboard_admin.php');
+     header('location:admin_page.php');
   }else{
-     $warning_msg[] = 'Incorrect username or password!';
+     $warning_alrt[] = 'Incorrect username or password!';
   }
 
 
@@ -64,3 +64,4 @@ if(isset($_POST['submit'])){
 }
 
 ?>
+<?php include 'controllers/alerts.php'; ?>

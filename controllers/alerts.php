@@ -1,27 +1,26 @@
 <?php
 
-if(isset($success)){
-   foreach($success as $success){
-      echo '<script>Swal.fire({title: "'.$success.'",icon: "success"});';
+if(isset($success_alrt)){
+   foreach($success_alrt as $success_alrt){
+      echo '<script>Swal.fire({title: "'.$success_alrt.'",icon: "success"});</script>';
    }
 }
 
-
-if(isset($warning)){
-   foreach($warning as $warning){
-    echo '<script>Swal.fire({title: "'.$warning.'",icon: "warning"});';
+if(isset($warning_alrt)){
+   foreach($warning_alrt as $warning_alrt){
+    echo '<script>Swal.fire({title: "'.$warning_alrt.'",icon: "warning"});</script>';
    }
 }
 
-if(isset($info)){
-   foreach($info as $info){
-    echo '<script>Swal.fire({title: "'.$info.'",icon: "info"});';
+if(isset($info_alrt)){
+   foreach($info as $info_alrt){
+    echo '<script>Swal.fire({title: "'.$info_alrt.'",icon: "info"});</script>';
    }
 }
 
-if(isset($error)){
-   foreach($error as $error){
-    echo '<script>Swal.fire({title: "'.$error.'",icon: "error"});';
+if(isset($error_alrt)){
+   foreach($error_alrt as $error_alrt){
+    echo '<script>Swal.fire({title: "'.$error_alrt.'",icon: "error"});</script>';
    }
 }
 

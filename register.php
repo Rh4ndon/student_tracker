@@ -16,10 +16,10 @@
  $select_student->execute([$name]);
 
  if($select_student->rowCount() > 0){
-    $warning[] = 'Student is already registered!';
+    $warning_alrt[] = 'Student is already registered!';
  }else{
     if($pass != $confirm_pass){
-       $warning[] = 'Password do not matched!';
+       $warning_alrt[] = 'Password do not matched!';
     }else{
         //record student data
        $insert_student = $conn->prepare("INSERT INTO `students`(student_name, username, password) VALUES(?,?,?)");
@@ -34,7 +34,8 @@
              setcookie('user_id', $row['id'], time() + 60*60*24*30, '/');
              header('location:student_home.php');
           }else{
-             $error[] = 'Error encountered please try again!';
+             $error_alrt[] = 'Error encountered please try again!';
+             
           }
        }
 
@@ -79,11 +80,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.all.min.js"></script>
 
-    <?php include 'controllers/alerts.php'; ?>
     
 </body>
 </html>
 
 
-
+<?php include 'controllers/alerts.php'; ?>
+    
 

@@ -10,16 +10,27 @@ if(isset($_COOKIE['user_id'])){
 }
 
 ?>
+  <?php
+          
+          $query_student = $conn->prepare("SELECT * FROM `students` WHERE id = ?");
+          $query_student->execute([$user_id]);
+          $fetch_student = $query_student->fetch(PDO::FETCH_ASSOC);
+          $student = $fetch_student['student_name'];
+          
+          ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
     <title>Student GPS Tracker</title>
     <link rel="stylesheet" href="css/home.css">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.min.css" rel="stylesheet">
-</head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+  </head>
 <body>
     <nav class="navbar">
         <div class="navbar-container container">
@@ -39,9 +50,8 @@ if(isset($_COOKIE['user_id'])){
 
 
 
-    <br><br><br><br>
-    <div class="row">
-      <div class="title">Updated</div>
+    <br><br><br><br> <br>
+      <div class="title">My Location</div>
       <div class="data" id="date"></div>
     </div>
     <div class="row">
@@ -50,16 +60,25 @@ if(isset($_COOKIE['user_id'])){
         <span id="lat"></span>, <span id="lng"></span>
       </div>
     </div>
+   
+
+    <div id="map"></div>
+
+
+
+  
     <script>
       var track = {
   
   // (A) INIT
-  student : <?php echo htmlspecialchars($user_id); ?>,   // student_id equals to session id
-  delay : 10000, // delay between gps update (ms)
+  student : <?php echo htmlspecialchars($user_id); ?>, // student_id equals to session id
+  stud : '<?php echo htmlspecialchars($student); ?>',  
+  delay : 5000, // delay between gps update (ms)
   timer : null,  // interval timer
   hDate : null,  // html date
   hLat : null,   // html latitude
   hLng : null,   // html longitude
+  
   init : () => {
     // (A1) GET HTML
     track.hDate = document.getElementById("date");
@@ -78,6 +97,7 @@ if(isset($_COOKIE['user_id'])){
       var data = new FormData();
       data.append("req", "update");
       data.append("id", track.student);
+      data.append("name", track.stud);
       data.append("lat", pos.coords.latitude);
       data.append("lng", pos.coords.longitude);
 
@@ -102,7 +122,19 @@ if(isset($_COOKIE['user_id'])){
     clearInterval(track.timer);
   }
 };
+
+
 window.onload = track.init;
+
+
+
+
+
+
+
+
+
+
     </script>
 
 
@@ -111,5 +143,87 @@ window.onload = track.init;
 
 
 
+
+
+
+
+
+
 </body>
 </html>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+
+
+
+  //map
+    // Map initialization 
+      var map = L.map('map').setView([16.9035, 121.6134], 20);
+
+      //osm layer
+      var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      });
+      osm.addTo(map);
+
+      if(!navigator.geolocation) {
+          console.log("Your browser doesn't support geolocation feature!")
+      } else {
+          setInterval(() => {
+              navigator.geolocation.getCurrentPosition(getPosition)
+          }, 5000);
+      }
+
+      var marker, circle;
+
+      var polygon = L.polygon([
+        [16.90381, 121.61275],
+        [16.90432, 121.6133],
+        [16.90315, 121.61402],
+        [16.90261, 121.61391]
+        
+        ]).addTo(map);
+      
+        polygon.bindPopup("ISU San Mateo.");
+
+      function getPosition(position){
+          // console.log(position)
+          var lat = position.coords.latitude
+          var long = position.coords.longitude
+          var accuracy = position.coords.accuracy
+
+          if(marker) {
+              map.removeLayer(marker)
+          }
+
+          if(circle) {
+              map.removeLayer(circle)
+          }
+
+          marker = L.marker([lat, long])
+          circle = L.circle([lat, long], {radius: accuracy})
+        
+
+          var featureGroup = L.featureGroup([marker, circle]).addTo(map)
+
+
+          map.fitBounds(featureGroup.getBounds())
+
+          map.setZoom(20);
+
+          console.log("Your coordinate is: Lat: "+ lat +" Long: "+ long+ " Accuracy: "+ accuracy)
+      }
+
+      var popup = L.popup();
+
+      function onMapClick(e) {
+          popup
+          .setLatLng(e.latlng)
+          .setContent("It is outside ISU San Mateo! " + e.latlng.toString())
+          .openOn(map);
+      }
+
+      map.on('click', onMapClick);
+
+
+  </script>
