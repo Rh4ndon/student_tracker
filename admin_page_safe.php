@@ -257,3 +257,118 @@ if(isset($_COOKIE['user_id'])){
 
 
 </script>
+
+
+
+<?php
+
+ //php location checker is inside or outside
+ function pointInPolygon($point, $polygon) {
+    $c = 0;
+    $p1 = $polygon[0];
+    for ($i = 1; $i < count($polygon); $i++) {
+        $p2 = $polygon[$i % count($polygon)];
+        if ($point['y'] > min($p1['y'], $p2['y'])
+            && $point['y'] <= max($p1['y'], $p2['y'])
+            && $point['x'] <= max($p1['x'], $p2['x'])
+            && $p1['y'] != $p2['y']) {
+                $xinters = ($point['y'] - $p1['y']) * ($p2['x'] - $p1['x']) / ($p2['y'] - $p1['y']) + $p1['x'];
+                if ($p1['x'] == $p2['x'] || $point['x'] <= $xinters) {
+                    $c++;
+                }
+        }
+        $p1 = $p2;
+    }
+    return $c % 2 != 0;
+}
+
+    function distance($point1, $point2) {
+    $radius = 6371; // Earth's radius in kilometers
+    $latDistance = deg2rad($point2['y'] - $point1['y']);
+    $lonDistance = deg2rad($point2['x'] - $point1['x']);
+    $a = sin($latDistance / 2) * sin($latDistance / 2) +
+        cos(deg2rad($point1['y'])) * cos(deg2rad($point2['y'])) *
+        sin($lonDistance / 2) * sin($lonDistance / 2);
+    $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+    $distance = $radius * $c * 1000; // convert to meters
+    return $distance;
+}
+
+// Define your polygon coordinates here
+$polygon = array(
+    array('x' => 121.61275, 'y' => 16.90381), // Coordinate 1
+    array('x' => 121.6133, 'y' => 16.90432), // Coordinate 2
+    array('x' => 121.61402, 'y' => 16.90315), // Coordinate 3
+    array('x' => 121.61391, 'y' => 16.90261), // Coordinate 4
+    // ...
+);
+
+
+            $query_location = $conn->prepare("SELECT * FROM `gps_track`");
+            $query_location->execute([]);
+            while($fetch_location = $query_location->fetch(PDO::FETCH_ASSOC)){ 
+                $id = $fetch_location['student_id'];
+
+                        // Define your student's coordinates here
+                $students = array('x' => $fetch_location['track_lng'], 'y' => $fetch_location['track_lat']);
+                $name=$fetch_location['name'];
+                $number = '09460548335';
+                if (pointInPolygon($students, $polygon)) {
+                    echo "<script>console.log('".$name." is inside ISU San Mateo!');</script>";
+                   } else {
+                   
+                   if (distance($students, $point) <= 500) {
+                          echo "<script>console.log('".$name." is within 500m of ISU San Mateo!');</script>";
+
+                          $url = 'https://semaphore.co/api/v4/messages';
+                          $data = array(  'apikey' => '7026c9e6d4b3eddee2202da4f6f9b141', //Your API KEY
+                                  'number' => $number,
+                                  'message' => $name.' is within 500m of ISU San Mateo!',
+                                  'sendername' => 'OJT Monitoring'
+                           );
+                  
+                          $options = array(
+                          'http' => array(
+                          'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                          'method'  => 'POST',
+                          'content' => http_build_query($data),
+                          ),
+                          );
+                          $context  = stream_context_create($options);
+                          $result = file_get_contents($url, false, $context);
+                  
+                          if ($result === FALSE) { echo'<script>console.log("message not sent")</script>'; }
+
+
+
+                      }else{
+                        echo "<script>console.log('".$name."  is 500m away from ISU San Mateo!');</script>";
+
+
+
+                        $url = 'https://semaphore.co/api/v4/messages';
+                          $data = array(  'apikey' => '7026c9e6d4b3eddee2202da4f6f9b141', //Your API KEY
+                                  'number' => $number,
+                                  'message' => $name.' is 500m away from ISU San Mateo!',
+                                  'sendername' => 'OJT Monitoring'
+                           );
+                  
+                          $options = array(
+                          'http' => array(
+                          'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                          'method'  => 'POST',
+                          'content' => http_build_query($data),
+                          ),
+                          );
+                          $context  = stream_context_create($options);
+                          $result = file_get_contents($url, false, $context);
+                  
+                          if ($result === FALSE) { echo'<script>console.log("message not sent")</script>'; }
+                      }
+                   
+                }
+            }
+
+            
+
+    ?>
