@@ -42,7 +42,7 @@ if(isset($_COOKIE['user_id'])){
             </div>
             <ul class="menu-items">
                 <li><a href="#">Home</a></li>
-                <li><a href="controllers/logout.php">Logout</a></li>
+                <li><a href="logout_student.php">Logout</a></li>
             </ul>
             <h1 class="logo">Student GPS Tracker</h1>
         </div>
@@ -93,7 +93,7 @@ if(isset($_COOKIE['user_id'])){
   // (B) SEND CURRENT LOCATION TO SERVER
   update : () => navigator.geolocation.getCurrentPosition(
     pos => {
-      // (B1) LOCATION DATA
+      // SEND DATA
       var data = new FormData();
       data.append("req", "update");
       data.append("id", track.student);
@@ -226,4 +226,28 @@ window.onload = track.init;
       map.on('click', onMapClick);
 
 
+      window.onbeforeunload = function() {
+      var data = new FormData();
+      data.append('del', '<?= $user_id ?>');
+
+       navigator.sendBeacon('controllers/log.php', data);
+      };
+
+
+window.onbeforeunload = function() {
+  $.ajax({
+    url: 'controllers/log.php', // URL of the PHP file
+    type: 'post', // The request method POST or GET
+    data: {
+        'del': '<?= $user_id ?>'
+    }, // The data to send
+    success: function(response) { // The function to execute upon a successful request
+        console.log(response);
+    },
+    error: function(jqXHR, textStatus, errorThrown) { // The function to execute upon a failed request
+        console.log(textStatus, errorThrown);
+    }
+});
+};
   </script>
+

@@ -179,6 +179,9 @@
     .navbar-container input[type="checkbox"]:checked ~ .logo{
         display: none;
     }
+    .logo{
+        font-size: 1.2rem;
+    }
 }
 
 

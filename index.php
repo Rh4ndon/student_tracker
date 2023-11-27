@@ -10,8 +10,8 @@
 </head>
 <body>
     <form method="POST" action="">
-        <h1>Student Tracker Login</h1>
-        <p>Please enter your credentials to access the student tracker.</p>
+        <h1>OJT MONITORING</h1>
+        
         <div class="input-container">
             <input type="text" name="username" placeholder="Username" required>
             <div class="fake-cursor"></div>
