@@ -47,6 +47,10 @@ if(isset($_POST['submit'])){
   $select_admin = $conn->prepare("SELECT * FROM `admin` WHERE username = ? AND password = ? LIMIT 1");
   $select_admin->execute([$username, $password]);
   $row_admin = $select_admin->fetch(PDO::FETCH_ASSOC);
+  //supervisor query
+  $select_supervisor = $conn->prepare("SELECT * FROM `supervisor` WHERE username = ? AND password = ? LIMIT 1");
+  $select_supervisor->execute([$username, $password]);
+  $row_supervisor = $select_supervisor->fetch(PDO::FETCH_ASSOC);
 
   if($select_student->rowCount() > 0){
      setcookie('user_id', $row['id'], time() + 60*60*24*30, '/');
@@ -55,7 +59,10 @@ if(isset($_POST['submit'])){
   }else if ($select_admin->rowCount() > 0){
      setcookie('user_id', $row_admin['id'], time() + 60*60*24*30, '/');
      header('location:admin_page.php');
-  }else{
+  }else if ($select_supervisor->rowCount() > 0){
+    setcookie('user_id', $row_supervisor['id'], time() + 60*60*24*30, '/');
+    header('location:supervisor_page.php');
+ }else{
      $warning_alrt[] = 'Incorrect username or password!';
   }
 

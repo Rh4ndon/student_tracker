@@ -28,7 +28,7 @@ class Track {
   // (D) UPDATE STUDENT COORDINATES
   function update ($id, $name, $lng, $lat) {
     $this->query(
-      "REPLACE INTO `gps_track` (`student_id`,`name`, `track_time`, `track_lng`, `track_lat`) VALUES (?,?,?,?,?)",
+      "REPLACE INTO `gps_track` (`student_id`,`name`, `track_time`, `track_lng`, `track_lat`) VALUES (?,?,?,?,?,?)",
       [$id, $name, date("Y-m-d H:i:s"), $lng, $lat]
     );
     return true;
@@ -38,6 +38,15 @@ class Track {
   function get ($id=null) {
     $this->query(
       "SELECT * FROM `gps_track`" . ($id==null ? "" : " WHERE `student_id`=?"),
+      $id==null ? null : [$id]
+    );
+    return $this->stmt->fetchAll();
+  }
+
+  // (E) GET STUDENT(S) COORDINATES
+  function colors ($id=null) {
+    $this->query(
+      "SELECT * FROM `color`" . ($id==null ? "" : " WHERE `student_id`=?"),
       $id==null ? null : [$id]
     );
     return $this->stmt->fetchAll();

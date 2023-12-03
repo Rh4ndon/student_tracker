@@ -12,5 +12,12 @@ if (isset($_POST["req"])) {
     case "get":
       echo json_encode($_TRACK->get(isset($_POST["id"]) ? $_POST["id"] : null));
       break;
+
+      // (B) GET RIDER(S) LAST KNOWN LOCATION
+    case "colors":
+      echo json_encode($_TRACK->colors(isset($_POST["id"]) ? $_POST["id"] : null));
+      break;
+
+    
   }
 }

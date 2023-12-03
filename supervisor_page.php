@@ -36,7 +36,7 @@ if(isset($_COOKIE['user_id'])){
                 <li><a href="#">Home</a></li>
                 <li><a href="controllers/logout.php">Logout</a></li>
             </ul>
-            <h1 class="logo">Admin Student Tracker</h1>
+            <h1 class="logo">Supervisor Page</h1>
         </div>
     </nav>
 
@@ -47,12 +47,56 @@ if(isset($_COOKIE['user_id'])){
 
     <br><br><br><br><br><br>
     <!-- HTML -->
-<div id="studentsList">
+<div id="studentsOutside">
     <table id="studentsTable">
         <!-- Table headers -->
         <tr>
             <th>List of students who are outside ISU San Mateo</th>
         </tr>
+        
+        <?php
+
+            if(isset($_POST['allow'])){
+                $std_id = $_POST['std_id'];
+                $update_name = $conn->prepare("UPDATE `color` SET status = ? WHERE student_id = ?");
+                $update_name->execute(['1', $std_id]);
+                $success_alrt[] = 'Student was allowed to go outside!';
+
+
+
+            }
+            if(isset($_POST['dont'])){
+                $std_id = $_POST['std_id'];
+                $update_name = $conn->prepare("UPDATE `color` SET status = ? WHERE student_id = ?");
+                $update_name->execute(['0', $std_id]);
+                $success_alrt[] = 'Student was cancel to allow going outside!';
+
+
+
+            }
+
+
+
+
+
+            $query_color = $conn->prepare("SELECT * FROM `color`");
+            $query_color->execute([]);
+            while($color = $query_color->fetch(PDO::FETCH_ASSOC)){                 
+                ?>
+            <tr>
+            <form method="POST" >    
+            <td><?= $color['name'];?> 
+            <input type="hidden" value="<?= $color['student_id'];?>" name="std_id">
+            <?php if($color['status'] == 0){
+                echo '<button type="submit" name="allow" style="background:#86b649;">Allow</button>';
+            }else{
+                echo '<button type="submit" name="dont" style="background:#ce2b0e;">Cancel Approve</button>';
+            }?>
+         
+            </form>
+            </tr>
+            <?php } ?>
+        
     </table>
 </div>
 <br>
@@ -172,44 +216,6 @@ const redIcon = L.divIcon({
 
 
 
-
-            //add student on list
-
-            // JavaScript
-             // Initialize an empty array to store the students
-            var studentsOutsideSchool = [];
-
-            // Function to add a student to the list
-            function addStudent(studentName) {
-            studentsOutsideSchool.push(studentName);
-            displayStudents();
-            }
-
-            // Function to remove a student from the list
-            function removeStudent(studentName) {
-            var index = studentsOutsideSchool.indexOf(studentName);
-             if (index > -1) {
-              studentsOutsideSchool.splice(index, 1);
-             }
-            displayStudents();
-            }
-
-            // Function to display the students in a table
-            function displayStudents() {
-             var table = document.getElementById('studentsTable');
-             // Clear the table, keeping the header
-             table.innerHTML = '<tr><th>List of students who are outside ISU San Mateo</th></tr>';
-             for(var i = 0; i < studentsOutsideSchool.length; i++) {
-              // Create a new row
-             var row = table.insertRow(-1);
-                // Insert a cell in the row
-             var cell = row.insertCell(0);
-             // Add the student name in the cell
-             cell.innerHTML = studentsOutsideSchool[i];
-             }
-            }
-
-
             <?php
             $query_location = $conn->prepare("SELECT * FROM `gps_track`");
             $query_location->execute([]);
@@ -257,7 +263,7 @@ const redIcon = L.divIcon({
                 if (isPointInPolygon(studentss, polygon)) {
                 student = L.marker([lat, long]).addTo(map);
                 student.bindPopup(stud +" is inside ISU San Mateo!").openPopup();
-                removeStudent(stud);
+              
            
 
                 } else {
@@ -269,7 +275,7 @@ const redIcon = L.divIcon({
                 if (distance <= 0.005) {
                 student = L.marker([lat, long]).addTo(map);
                 student.bindPopup(stud +" is within 500 meters from ISU San Mateo!").openPopup();
-                addStudent(stud);
+              
 
                 }else{
 
@@ -296,8 +302,7 @@ const redIcon = L.divIcon({
                     }
 
                     student.bindPopup(stud + " is 500 meters away from ISU San Mateo!").openPopup();
-                    addStudent(stud);
-
+                   
             }})
 
               
@@ -442,10 +447,10 @@ if (is_in_polygon(4, $vertices_x, $vertices_y, $student_longitude, $student_lati
        $insert_student->execute([$id, $name, '0']);
         }
 
-         //student query
-         $select_student = $conn->prepare("SELECT * FROM `color` WHERE student_id = ?");
-         $select_student->execute([$id]);
-         $row = $select_student->fetch(PDO::FETCH_ASSOC);
+        //student query
+        $select_student = $conn->prepare("SELECT * FROM `color` WHERE student_id = ?");
+        $select_student->execute([$id]);
+        $row = $select_student->fetch(PDO::FETCH_ASSOC);
 
         if($row['status']==0){
 
@@ -484,3 +489,5 @@ if (is_in_polygon(4, $vertices_x, $vertices_y, $student_longitude, $student_lati
             
 
     ?>
+
+<?php include 'controllers/alerts.php'; ?>

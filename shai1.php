@@ -1,5 +1,5 @@
 <?php 
-$password = sha1('admin123');
+$password = sha1('supervisor123');
 
 function create_unique_id(){
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
