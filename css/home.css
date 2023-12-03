@@ -190,3 +190,14 @@
     height: 90vh;
     
 }
+
+table{
+    font-size: 14px;
+    font-family: 'Courier New', Courier, monospace;
+}
+button{
+    font-size: 14px;
+    font-family: 'Courier New', Courier, monospace;
+    border-radius: 5px;
+    padding: 2px;
+}
