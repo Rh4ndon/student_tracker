@@ -33,10 +33,12 @@ if(isset($_COOKIE['user_id'])){
                 <span class="line line3"></span>
             </div>
             <ul class="menu-items">
-                <li><a href="#">Home</a></li>
+            <li><a href="supervisor_page_choice.php">Home</a></li>
                 <li><a href="controllers/logout.php">Logout</a></li>
+                <li><button style="background:#86b649;" onclick="window.location.reload()">Refresh</button</li>
             </ul>
-            <h1 class="logo">Admin Student Tracker</h1>
+           
+            <h1 class="logo">Supervisor Page</h1>
         </div>
     </nav>
 
@@ -47,12 +49,63 @@ if(isset($_COOKIE['user_id'])){
 
     <br><br><br><br><br><br>
     <!-- HTML -->
-<div id="studentsList">
+<div id="studentsOutside">
     <table id="studentsTable">
         <!-- Table headers -->
         <tr>
-            <th>List of students who are outside ISU San Mateo</th>
+            <th>List of Students to Monitor</th>
         </tr>
+        
+        <?php
+
+            if(isset($_POST['allow'])){
+                $std_id = $_POST['std_id'];
+                $update_name = $conn->prepare("UPDATE `color` SET status = ? WHERE student_id = ?");
+                $update_name->execute(['1', $std_id]);
+                $success_alrt[] = 'Student was allowed to go outside!';
+
+
+
+            }
+            if(isset($_POST['dont'])){
+                $std_id = $_POST['std_id'];
+                $update_name = $conn->prepare("UPDATE `color` SET status = ? WHERE student_id = ?");
+                $update_name->execute(['0', $std_id]);
+                $success_alrt[] = 'Student was cancel to allow going outside!';
+
+
+
+            }
+
+
+
+
+
+            $query_color = $conn->prepare("SELECT * FROM `color`");
+            $query_color->execute([]);
+            $num_rows_color = $query_color->rowCount();
+
+            if($num_rows_color>0){
+            while($color = $query_color->fetch(PDO::FETCH_ASSOC)){       
+            ?>
+                <tr>
+                <form method="POST" >    
+                <td><?= $color['name'];?> 
+                <input type="hidden" value="<?= $color['student_id'];?>" name="std_id">
+                <?php if($color['status'] == 0){
+                    echo '<button type="submit" name="allow" style="background:#86b649;">Press to Allow</button>';
+                }else{
+                    echo '<button type="submit" name="dont" style="background:#ce2b0e;">Press to Cancel Approve</button>';
+                }?>
+             
+                </form>
+                </tr>
+                <?php }} ?>
+
+     
+
+   
+        
     </table>
 </div>
 <br>
@@ -81,7 +134,7 @@ if(isset($_COOKIE['user_id'])){
 
 //map
    // Map initialization 
-    var map = L.map('map').setView([16.9035, 121.6134], 20);
+    var map = L.map('map').setView([16.874674, 121.595198], 20);
 
     //osm layer
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -142,7 +195,7 @@ const redIcon = L.divIcon({
         setInterval(() => {
 
              // Your school polygon coordinates
-            let polygon = [[121.61275, 16.90381], [121.6133, 16.90432], [121.61402, 16.90315], [121.61391, 16.90261]];
+            let polygon = [[121.595171, 16.874445], [121.595436, 16.874669], [121.595241, 16.874886], [121.594993, 16.874682]];
 
           // Function to check if a point is inside a polygon
             function isPointInPolygon(point, polygon) {
@@ -170,44 +223,6 @@ const redIcon = L.divIcon({
             };
 
 
-
-
-
-            //add student on list
-
-            // JavaScript
-             // Initialize an empty array to store the students
-            var studentsOutsideSchool = [];
-
-            // Function to add a student to the list
-            function addStudent(studentName) {
-            studentsOutsideSchool.push(studentName);
-            displayStudents();
-            }
-
-            // Function to remove a student from the list
-            function removeStudent(studentName) {
-            var index = studentsOutsideSchool.indexOf(studentName);
-             if (index > -1) {
-              studentsOutsideSchool.splice(index, 1);
-             }
-            displayStudents();
-            }
-
-            // Function to display the students in a table
-            function displayStudents() {
-             var table = document.getElementById('studentsTable');
-             // Clear the table, keeping the header
-             table.innerHTML = '<tr><th>List of students who are outside ISU San Mateo</th></tr>';
-             for(var i = 0; i < studentsOutsideSchool.length; i++) {
-              // Create a new row
-             var row = table.insertRow(-1);
-                // Insert a cell in the row
-             var cell = row.insertCell(0);
-             // Add the student name in the cell
-             cell.innerHTML = studentsOutsideSchool[i];
-             }
-            }
 
 
             <?php
@@ -256,8 +271,8 @@ const redIcon = L.divIcon({
                 // Check if the student is inside the polygon
                 if (isPointInPolygon(studentss, polygon)) {
                 student = L.marker([lat, long]).addTo(map);
-                student.bindPopup(stud +" is inside ISU San Mateo!").openPopup();
-                removeStudent(stud);
+                student.bindPopup(stud +" is inside Philrice San Mateo!").openPopup();
+              
            
 
                 } else {
@@ -268,8 +283,8 @@ const redIcon = L.divIcon({
                 // Note: This is a simplification and might not be accurate for large polygons or long distances
                 if (distance <= 0.005) {
                 student = L.marker([lat, long]).addTo(map);
-                student.bindPopup(stud +" is within 500 meters from ISU San Mateo!").openPopup();
-                addStudent(stud);
+                student.bindPopup(stud +" is within 500 meters from Philrice San Mateo!").openPopup();
+              
 
                 }else{
 
@@ -295,9 +310,8 @@ const redIcon = L.divIcon({
                         student = L.marker([lat, long],{ icon: redIcon }).addTo(map);
                     }
 
-                    student.bindPopup(stud + " is 500 meters away from ISU San Mateo!").openPopup();
-                    addStudent(stud);
-
+                    student.bindPopup(stud + " is 500 meters away from Philrice San Mateo!").openPopup();
+                   
             }})
 
               
@@ -322,21 +336,21 @@ const redIcon = L.divIcon({
 
 
     var polygon = L.polygon([
-      [16.90381, 121.61275],
-      [16.90432, 121.6133],
-      [16.90315, 121.61402],
-      [16.90261, 121.61391]
+        [16.874445, 121.595171],
+        [16.874669, 121.595436],
+        [16.874886, 121.595241],
+        [16.874682, 121.594993]
       
       ]).addTo(map);
     
-      polygon.bindPopup("ISU San Mateo.");
+      polygon.bindPopup("Philrice San Mateo.");
 
     var popup = L.popup();
 
     function onMapClick(e) {
         popup
         .setLatLng(e.latlng)
-        .setContent("It is outside ISU San Mateo! " + e.latlng.toString())
+        .setContent("It is outside Philrice San Mateo! " + e.latlng.toString())
         .openOn(map);
     }
 
@@ -380,15 +394,15 @@ function haversineGreatCircleDistance(
 }
 
 
-$longitude1 = 121.61275;
-$longitude2 = 121.6133;
-$longitude3 = 121.61402;
-$longitude4 = 121.61391;
+$longitude1 = 121.595171;
+$longitude2 = 121.595436;
+$longitude3 = 121.595241;
+$longitude4 = 121.594993;
 
-$latitude1 = 16.90381;
-$latitude2 = 16.90432;
-$latitude3 = 16.90315;
-$latitude4 = 16.90261;
+$latitude1 = 16.874445;
+$latitude2 = 16.874669;
+$latitude3 = 16.874886;
+$latitude4 = 16.874682;
 
 
 
@@ -414,19 +428,19 @@ $student_longitude = $fetch_location['track_lng'];
 $student_latitude = $fetch_location['track_lat'];
 
 // School's location (for distance calculation, replace with actual coordinates)
-$school_longitude = 121.6134;
-$school_latitude = 16.9035;
+$school_longitude = 121.595198;
+$school_latitude = 16.874674;
 
 
 // Check if inside the polygon
 if (is_in_polygon(4, $vertices_x, $vertices_y, $student_longitude, $student_latitude)) {
-    echo "<script>console.log('".$name." is inside ISU San Mateo!');</script>";
+    echo "<script>console.log('".$name." is inside Philrice San Mateo!');</script>";
 } else {
     // Calculate the distance from the school
     $distance = haversineGreatCircleDistance($school_latitude, $school_longitude, $student_latitude, $student_longitude);
     if ($distance <= 500) {
         // Send alert
-        echo "<script>console.log('".$name." is within 500m of ISU San Mateo!');</script>";
+        echo "<script>console.log('".$name." is within 500m of Philrice San Mateo!');</script>";
 
     }else{
         //student query
@@ -435,25 +449,25 @@ if (is_in_polygon(4, $vertices_x, $vertices_y, $student_longitude, $student_lati
         $row = $select_student->fetch(PDO::FETCH_ASSOC);
 
         if($select_student->rowCount() > 0){
-            echo "<script>console.log('".$name." is already recorded on the list of student outside ISU San Mateo!');</script>";
+            echo "<script>console.log('".$name." is already recorded on the list of student outside Philrice San Mateo!');</script>";
         }else{
         //record student data
        $insert_student = $conn->prepare("INSERT INTO `color`(student_id, name, status) VALUES(?,?,?)");
        $insert_student->execute([$id, $name, '0']);
         }
 
-         //student query
-         $select_student = $conn->prepare("SELECT * FROM `color` WHERE student_id = ?");
-         $select_student->execute([$id]);
-         $row = $select_student->fetch(PDO::FETCH_ASSOC);
+        //student query
+        $select_student = $conn->prepare("SELECT * FROM `color` WHERE student_id = ?");
+        $select_student->execute([$id]);
+        $row = $select_student->fetch(PDO::FETCH_ASSOC);
 
         if($row['status']==0){
 
-            echo "<script>console.log('".$name."  is 500m away from ISU San Mateo!');</script>";
+            echo "<script>console.log('".$name."  is 500m away from Philrice San Mateo!');</script>";
             $url = 'https://semaphore.co/api/v4/messages';
             $data = array(  'apikey' => '7026c9e6d4b3eddee2202da4f6f9b141', //Your API KEY
                     'number' => $number,
-                    'message' => $name.' is 500m away from ISU San Mateo!',
+                    'message' => $name.' is 500m away from Philrice San Mateo!',
                     'sendername' => 'SEMAPHORE'
              );
     
@@ -470,7 +484,7 @@ if (is_in_polygon(4, $vertices_x, $vertices_y, $student_longitude, $student_lati
             if ($result === FALSE) { echo'<script>console.log("message not sent")</script>'; }
             
         }else{
-            echo "<script>console.log('".$name."  is allowed to go 500m away from ISU San Mateo!');</script>";
+            echo "<script>console.log('".$name."  is allowed to go 500m away from Philrice San Mateo!');</script>";
         }
 
        
@@ -484,3 +498,5 @@ if (is_in_polygon(4, $vertices_x, $vertices_y, $student_longitude, $student_lati
             
 
     ?>
+
+<?php include 'controllers/alerts.php'; ?>

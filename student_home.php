@@ -158,7 +158,7 @@ window.onload = track.init;
 
   //map
     // Map initialization 
-      var map = L.map('map').setView([16.9035, 121.6134], 20);
+      var map = L.map('map').setView([16.893456, 121.599361], 14);
 
       //osm layer
       var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -171,7 +171,7 @@ window.onload = track.init;
       } else {
           setInterval(() => {
               navigator.geolocation.getCurrentPosition(getPosition)
-          }, 5000);
+          }, 50000);
       }
 
       var marker, circle;
@@ -185,6 +185,26 @@ window.onload = track.init;
         ]).addTo(map);
       
         polygon.bindPopup("ISU San Mateo.");
+
+        var polygon2 = L.polygon([
+        [16.882039, 121.584991],
+        [16.881832, 121.585692],
+        [16.881448, 121.585582],
+        [16.881718, 121.584839]
+        
+        ]).addTo(map);
+      
+        polygon2.bindPopup("LGU San Mateo.")
+
+        var polygon3 = L.polygon([
+        [16.874445, 121.595171],
+        [16.874669, 121.595436],
+        [16.874886, 121.595241],
+        [16.874682, 121.594993]
+        
+        ]).addTo(map);
+      
+        polygon3.bindPopup("Philrice San Mateo.")
 
       function getPosition(position){
           // console.log(position)

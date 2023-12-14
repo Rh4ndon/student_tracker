@@ -28,7 +28,7 @@ class Track {
   // (D) UPDATE STUDENT COORDINATES
   function update ($id, $name, $lng, $lat) {
     $this->query(
-      "REPLACE INTO `gps_track` (`student_id`,`name`, `track_time`, `track_lng`, `track_lat`) VALUES (?,?,?,?,?,?)",
+      "REPLACE INTO `gps_track` (`student_id`, `name`, `track_time`, `track_lng`, `track_lat`) VALUES (?,?,?,?,?)",
       [$id, $name, date("Y-m-d H:i:s"), $lng, $lat]
     );
     return true;

@@ -58,10 +58,10 @@ if(isset($_POST['submit'])){
      
   }else if ($select_admin->rowCount() > 0){
      setcookie('user_id', $row_admin['id'], time() + 60*60*24*30, '/');
-     header('location:admin_page.php');
+     header('location:admin_page_choice.php');
   }else if ($select_supervisor->rowCount() > 0){
     setcookie('user_id', $row_supervisor['id'], time() + 60*60*24*30, '/');
-    header('location:supervisor_page.php');
+    header('location:supervisor_page_choice.php');
  }else{
      $warning_alrt[] = 'Incorrect username or password!';
   }

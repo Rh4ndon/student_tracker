@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 03, 2023 at 03:17 AM
+-- Generation Time: Dec 14, 2023 at 11:32 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -56,13 +56,6 @@ CREATE TABLE IF NOT EXISTS `color` (
   PRIMARY KEY (`student_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `color`
---
-
-INSERT INTO `color` (`student_id`, `name`, `status`) VALUES
-('4', 'Im Sample', '0');
-
 -- --------------------------------------------------------
 
 --
@@ -80,14 +73,6 @@ CREATE TABLE IF NOT EXISTS `gps_track` (
   KEY `track_time` (`track_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `gps_track`
---
-
-INSERT INTO `gps_track` (`student_id`, `name`, `track_time`, `track_lng`, `track_lat`) VALUES
-('3', 'My Name', '2023-11-19 09:14:09', '121.6113020', '16.9021680'),
-('4', 'Im Sample', '2023-11-19 09:17:24', '121.5882520', '16.8794810');
-
 -- --------------------------------------------------------
 
 --
@@ -101,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `students` (
   `username` varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `password` varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `students`
@@ -111,7 +96,8 @@ INSERT INTO `students` (`id`, `student_name`, `username`, `password`) VALUES
 (1, 'Trial Student', 'Test', '7288edd0fc3ffcbe93a0cf06e3568e28521687bc'),
 (4, 'Im Sample', 'sample', '7c4a8d09ca3762af61e59520943dc26494f8941b'),
 (3, 'My Name', 'name', '7c4a8d09ca3762af61e59520943dc26494f8941b'),
-(5, 'Some OneStudent', 'juan', '9c067f9d6c5545cff67183004b480bd30e21e8f3');
+(5, 'Some OneStudent', 'juan', '9c067f9d6c5545cff67183004b480bd30e21e8f3'),
+(6, 'Xample', 'xample', '7c4a8d09ca3762af61e59520943dc26494f8941b');
 
 -- --------------------------------------------------------
 

@@ -33,9 +33,11 @@ if(isset($_COOKIE['user_id'])){
                 <span class="line line3"></span>
             </div>
             <ul class="menu-items">
-                <li><a href="#">Home</a></li>
+            <li><a href="supervisor_page_choice.php">Home</a></li>
                 <li><a href="controllers/logout.php">Logout</a></li>
+                <li><button style="background:#86b649;" onclick="window.location.reload()">Refresh</button</li>
             </ul>
+           
             <h1 class="logo">Supervisor Page</h1>
         </div>
     </nav>
@@ -51,7 +53,7 @@ if(isset($_COOKIE['user_id'])){
     <table id="studentsTable">
         <!-- Table headers -->
         <tr>
-            <th>List of students who are outside ISU San Mateo</th>
+            <th>List of Students to Monitor</th>
         </tr>
         
         <?php
@@ -81,21 +83,28 @@ if(isset($_COOKIE['user_id'])){
 
             $query_color = $conn->prepare("SELECT * FROM `color`");
             $query_color->execute([]);
-            while($color = $query_color->fetch(PDO::FETCH_ASSOC)){                 
-                ?>
-            <tr>
-            <form method="POST" >    
-            <td><?= $color['name'];?> 
-            <input type="hidden" value="<?= $color['student_id'];?>" name="std_id">
-            <?php if($color['status'] == 0){
-                echo '<button type="submit" name="allow" style="background:#86b649;">Allow</button>';
-            }else{
-                echo '<button type="submit" name="dont" style="background:#ce2b0e;">Cancel Approve</button>';
-            }?>
-         
-            </form>
-            </tr>
-            <?php } ?>
+            $num_rows_color = $query_color->rowCount();
+
+            if($num_rows_color>0){
+            while($color = $query_color->fetch(PDO::FETCH_ASSOC)){       
+            ?>
+                <tr>
+                <form method="POST" >    
+                <td><?= $color['name'];?> 
+                <input type="hidden" value="<?= $color['student_id'];?>" name="std_id">
+                <?php if($color['status'] == 0){
+                    echo '<button type="submit" name="allow" style="background:#86b649;">Press to Allow</button>';
+                }else{
+                    echo '<button type="submit" name="dont" style="background:#ce2b0e;">Press to Cancel Approve</button>';
+                }?>
+             
+                </form>
+                </tr>
+                <?php }} ?>
+
+     
+
+   
         
     </table>
 </div>
